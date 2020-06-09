@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <head>
+      <title>{{data['superid']}} </title>
+      <h2> All data of Superevent : {{data['superid']}} </h2>
+      <div>
+        <form method="post">
+            <input type="hidden" name="Superid" value="{{data['superid']}}">
+            
+              {% for stat in statlist%}
+                  <input type="checkbox" value="{{stat[0]}}" name="add_tag" id="id_{{stat[0]}}" >
+                  <label for="id_{{stat[0]}}">{{stat[1]}}</label>
+                  
+              {% endfor %}
+              <!-- <option value="unknown">Real:Unknown</option>
+              <option value="ambiguous">Ambiguous</option>
+              <option value="special">Special</option>
+              <option value="known">Real:Known</option> -->
+            
+            <input type="submit" name="action" value="Save">
+            <input type="submit" name="action" value="Discard">
+            <input type="submit" name="action" value="Previous">
+            <input type="submit" name="action" value="Next">
+        </form>
+      </div>
+    
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static' , filename='bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static' , filename= 'theme.css') }}" rel="stylesheet">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
+    <script type="text/javascript">
+
+    </script>
+  </head>
+
+  <body>
+  Obs-ID : {{data['obsid']}}
+  <style>
+  table {
+    border-collapse: collapse;
+  }
+  table, td, th {
+    padding: 10px;
+    border: 1px solid black;
+    overflow: hidden;
+    word-wrap: break-word;
+  }
+  a {
+    word-wrap: break-word;
+  }
+  </style>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="{{url_for('home')}}">Triggered Search</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="{{url_for('home')}}">Home</a></li>
+            <li><a href="{{url_for('home')}}">GRB Search</a></li>
+            <li><a href="{{url_for('add_tag')}}">Add Tag</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  <table>
+  <td width="300px">
+    {% if data['stattxt'] != [] %}
+      {% set trigtimes = data['stattxt'][0].split(' ')[1]   %}
+      {% set distfromsaa = data['stattxt'][1].split(' ')[1] %}
+      {% set disttosaa = data['stattxt'][1].split(' ')[4]   %}
+      {% set bestbin = data['stattxt'][2].split(' ')[1]     %}
+      {% set cztbins = data['stattxt'][3].split(' ')[1]     %}
+      {% set vetobins = data['stattxt'][3].split(' ')[4]    %}
+      {% set cztquads = data['stattxt'][4].split(' ')[1]    %}
+      {% set vetoquads = data['stattxt'][4].split(' ')[4]   %}         
+      {% set cztsig = data['stattxt'][5].split(' ')[1]      %}
+      {% set vetosig = data['stattxt'][5].split(' ')[4]     %}
+    {% endif %}
+    <span style="font-size: small"> <span style="font-weight: bold;"> Trigger times : </span> {{trigtimes}} </span><br>
+    <span style="font-size: small"> <span style="font-weight: bold;"> From SAA : </span> {{distfromsaa}} </span><br>
+    <span style="font-size: small"> <span style="font-weight: bold;"> To SAA : </span> {{disttosaa}} </span><br>
+    <span style="font-size: small"> <span style="font-weight: bold;"> Best Binning : </span> {{bestbin}} </span><br>
+    <span style="font-size: small"> <span style="font-weight: bold;"> CZTI binnings : </span> {{cztbins}} </span><br>
+    <span style="font-size: small"> <span style="font-weight: bold;"> Veto Binnings : </span> {{vetobins}} </span><br>
+    <span style="font-size: small"> <span style="font-weight: bold;"> CZTI Quads : </span> {{cztquads}} </span><br>
+    <span style="font-size: small"> <span style="font-weight: bold;"> Veto Quads : </span> {{vetoquads}} </span><br>
+    <span style="font-size: small"> <span style="font-weight: bold;"> CZTI Significance : </span> {{cztsig}} </span><br>
+    <span style="font-size: small"> <span style="font-weight: bold;"> Veto Significance : </span> {{vetosig}} </span>
+  </td>
+  <td>
+  <table>
+    <tr> <th> Orbit</th> <th> LC Type </th> <th> Binning Size</th> <th> Background Rate</th> <th> Rate above background</th> <th> Total Counts</th> <th> T90</th> </tr>
+    {% for row in data['statcsv'] %}
+    <tr> 
+      {% for cell in row %}
+        <td> {{cell}} </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
+  </td>
+</table>
+<hr>
+<table>
+  <tr>
+    {% for snap, pdf in data['imgs'] %}
+    <td>
+      <a href="{{url_for('static',filename='pdffiles/'+data['superid']+'/'+pdf)}}"> <img src="{{url_for('static',filename='pdffiles/'+data['superid']+'/'+snap)}}" style="width:250px;height:200px;" align="top"> {{pdf}} </a> 
+    </td>
+    {% endfor %}
+  </tr>
+</table>
+<hr>
+<h3> List of events</h3>
+<b>Band 0 </b> : 20-50 KeV for CZTI, complete range for Veto, <b>Band 1 </b> : 50-100 KeV CZTI, <b>Band 2</b> : >100 KeV CZTI
+<table>
+  <tr>
+    <th>Event-ID</th> <th>Trigger Time</th> <th>Binning Size</th> <th>Method</th> <th>Orbit</th> <th> Obs-ID</th>
+    <th>Time after SAA</th> <th>Time before SAA</th> <th> Rank (czti) </th> <th>Detected in Quads B0</th>
+    <th>Detected in Quads B1</th> <th>Detected in Quads B2</th>
+    <th>Significance B0 </th> <th>Significance B1 </th> <th>Significance B2 </th> <th> Significance B0 Q0</th> <th> Significance B0 Q1</th> <th> Significance B0 Q2</th> <th> Significance B0 Q3</th> <th> Significance B1 Q0</th> <th> Significance B1 Q1</th> <th> Significance B1 Q2</th> <th> Significance B1 Q3</th> <th> Significance B2 Q0</th> <th> Significance B2 Q1</th> <th> Significance B2 Q2</th> <th> Significance B2 Q3</th> <th> Rate B0 Q0</th>
+    <th> Rate B0 Q1</th> <th> Rate B0 Q2</th> <th> Rate B0 Q3</th> <th> Rate B1 Q0</th> <th> Rate B1 Q1</th> <th> Rate B1 Q2</th> <th> Rate B1 Q3</th> <th> Rate B2 Q0</th> <th> Rate B2 Q1</th> <th> Rate B2 Q2</th> <th> Rate B2 Q3</th>
+  </tr>
+  {% for event in data['eventlist'] %}
+  <tr>
+    {% for evt in event %}
+    <td> {{evt}} </td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+</table>
+  </body>
+</html>

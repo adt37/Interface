@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Triggered Search | Scanning Page</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static' , filename='bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static' , filename= 'theme.css') }}" rel="stylesheet">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
+    <script type="text/javascript">
+
+    </script>
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="{{url_for('home')}}">Triggered Search</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="{{url_for('home')}}">Home</a></li>
+            <li><a href="{{url_for('home')}}">GRB Search</a></li>
+            <li><a href="{{url_for('add_tag')}}">Add Tag</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <h2> GRBs detetcted by automated pipeline in CZTI data between {{sdate}} and {{edate}} </h2>
+    <form method="POST"><div align="right"><input type="submit" value="Discard Multiple" ></div>
+    <table class="table table-striped" id=table_id>
+      <thead class="thead-dark">
+      <th>
+        
+        <tr>
+          <th>Superevent</th>
+          <th>Trigger-Time</th>
+          <th>Number of sub-events</th>
+          <th>T90 CZTI</th>
+          <th>T90 VETO</th>
+          <th>CZTI LC</th>
+          <th>VETO LC</th>
+          <th>Stats</th>
+          <th>Discard Multiple</th>
+
+        </tr>
+      </th>
+      </thead>
+      <tbody>
+        {% for se in superevents %}
+        <tr>
+          <td><a href="{{url_for('inspect',superevent_id = se['superid'])}}">{{se['superid']}}</a></td>
+          <td> {{se['triggertime']}} </td>
+          <td> {{se['numevents']}} </td>
+          <td> {{se['t90czt']}} </td>
+          <td> {{se['t90veto']}} </td>
+          <td> <img src="{{url_for('static',filename=se['snapczt'])}}" style="width:200px;height:150px;" > </td> 
+          <td> <img src="{{url_for('static',filename=se['snapveto'])}}" style="width:200px;height:150px;" > </td> 
+          
+          {% if se['stattxt'] != [] %}
+            {% set trigtimes = se['stattxt'][0].split(' ')[1] %}
+            {% set distfromsaa = se['stattxt'][1].split(' ')[1] %}
+            {% set disttosaa = se['stattxt'][1].split(' ')[4] %}
+            {% set bestbin = se['stattxt'][2].split(' ')[1] %}
+            {% set cztbins = se['stattxt'][3].split(' ')[1] %}
+            {% set vetobins = se['stattxt'][3].split(' ')[4] %}
+            {% set cztquads = se['stattxt'][4].split(' ')[1] %}
+            {% set vetoquads = se['stattxt'][4].split(' ')[4] %}         
+            {% set cztsig = se['stattxt'][5].split(' ')[1] %}
+            {% set vetosig = se['stattxt'][5].split(' ')[4] %}
+          {% endif %}
+            
+          <td style="width:300px;word-wrap:break-word;">
+          <span style="font-size: small"> <span style="font-weight: bold;"> From SAA : </span> {{distfromsaa}} </span><br>
+          <span style="font-size: small"> <span style="font-weight: bold;"> To SAA : </span> {{disttosaa}} </span><br>
+          <span style="font-size: small"> <span style="font-weight: bold;"> Best Binning : </span> {{bestbin}} </span><br>
+
+          <span {% if cztbins=='None' %} style="color:red" {% endif %}><span style="font-size: small"> <span style="font-weight: bold;"> CZTI binnings : </span>  {{cztbins}} </span></span><br>
+
+          <span style="font-size: small"> <span style="font-weight: bold;"> Veto Binnings : </span> {{vetobins}} </span><br>
+          <span style="font-size: small"> <span style="font-weight: bold;"> CZTI Quads : </span> {{cztquads}} </span><br>
+          <span style="font-size: small"> <span style="font-weight: bold;"> Veto Quads : </span> {{vetoquads}} </span><br>
+          <span style="font-size: small"> <span style="font-weight: bold;"> CZTI Significance : </span> {{cztsig}} </span><br>
+          <span style="font-size: small"> <span style="font-weight: bold;"> Veto Significance : </span> {{vetosig}} </span>
+          
+          </td>
+          <td>
+            <input type="checkbox" value="{{se['superid']}}" name="Discard" id="id_{{se['superid']}}" >
+            <label for="id_{{se['superid']}}">{{se['superid']}}</label>
+          </td>
+
+        </tr>
+        {% endfor %}
+        
+      </tbody>
+    </table>
+   </form>
+  </body>
+</html>

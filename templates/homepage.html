@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Triggered Search | Home</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static',filename='bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static',filename='theme.css') }}" rel="stylesheet">
+  
+
+  </head> 
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="{{url_for('home')}}">Triggered Search</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="{{url_for('home')}}">Home</a></li>
+            <li><a href="{{url_for('home')}}">GRB Search</a></li>
+            <li><a href="{{url_for('add_tag')}}">Add Tag</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container theme-showcase col-sm-8 col-sm-offset-1 role= 'main'" >
+
+      <div class="row">
+        <div>
+          <div class="panel panel-primary">
+
+            <div class="panel-heading">
+            <h3 class="panel-title">GRB Search</h3>
+            </div>
+            <div class="panel-body">
+              <form method="POST" action="{{url_for('home')}}">
+                <div class="form-group">
+                  <label for="startdate">Start Date of the GRB Search</label>
+                  <input type="date" class="form-control" name="startdate" placeholder="START DATE">
+                </div>
+                <div class="form-group">
+                  <label for="enddate">End Date of the GRB Search</label>
+                  <input type="date" class="form-control" name="enddate" placeholder="END DATE">
+                </div>
+                <div class="form-group"><p> Type : <select name="evttype">
+                  {% for stat in statlist%}
+                  <option value="{{stat[0]}}" class="form-control">{{stat[0]}}</option>
+                  {% endfor %}
+                  <option value="none" class="form-control">Unchecked</option>
+                  <!-- <option value="unknown" class="form-control">Saved:Real-Unknown</option>
+                  <option value="known" class="form-control"> Saved:Real-Known </option>
+                  <option value="ambiguous"> Saved:ambiguous</option>
+                  <option value="special"> Saved:special</option>
+                  <option value="discarded">Discarded</option>
+                  <option value="saved">All Saved</option> -->
+                  </select></p>
+                </div>
+              <p><button type="submit" class="btn btn-primary">Search</button></p>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+  </body>
+
+</html>

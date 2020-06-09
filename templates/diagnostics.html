@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{data['ttime']}}</title>
+	<h2>The Top-N diagnostics are: </h2>
+</head>
+<body>
+Trigger Time: {{data['ttime']}}
+Obs-ID: {{data['obsid']}}
+<style>
+	table {
+		border-collapse: collapse;
+	}
+	table, td ,th {
+		padding:10px;
+		border:1px solid black;
+		overflow: hidden;
+		word-wrap: break-word;
+	}
+	a {
+		word-wrap:break-word;
+	}
+</style>
+ (obsidtxt text PRIMARY KEY, obsid text ,cz text, binning text, method text, 
+                                                       cutb0Q0 real,cutb0Q1 real, cutb0Q2 real, cutb0Q3 real,
+                                                       cutb1Q0 real,cutb1Q1 real, cutb1Q2 real, cutb1Q3 real,
+                                                       cutb2Q0 real,cutb2Q1 real, cutb2Q2 real, cutb2Q3 real,
+                                                       );""")
+
+<hr>
+<h2> Diagnostics: </h2>
+<b>  Band 0 </b> :20-50 keV for CZTI, complete range for Veto, <b> Band 1 </b> : 50-100 keV for CZTI, <b> Band 2</b> : >100 keV for CZTI
+<h3> CUTOFFS for CUMSUM and NSIGMA:</h3>
+<table>
+    <tr>
+        <th>OBS-ID Text</th><th>Obs-Id</th><th>CZTI/VETO</th> <th>BINNING</th> <th>METHOD</th> 
+        <th>CUT B0Q0</th> <th>CUT B0Q1</th> <th>CUT B0Q2</th> <th>CUT B0Q3</th>
+        <th>CUT B1Q0</th> <th>CUT B1Q1</th> <th>CUT B1Q2</th> <th>CUT B1Q3</th>
+        <th>CUT B2Q0</th> <th>CUT B2Q1</th> <th>CUT B2Q2</th> <th>CUT B2Q3</th>
+    </tr>
+    {% for cutoff_event in data['cutoff_eventlist'] %}
+    <tr>
+        {% for cutoff_evt in cutoff_event %}
+        <td>{{cutoff_evt}}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    
+</table>
+
+
+
+<table>
+	<tr>	
+		<th>Event-ID</th> <th> Trigger Time </th> <th> Obs-ID</th> <th> Orbit </th><th> Binning</th> <th> Rank B0 Q0</th> <th> Rank B0 Q1 </th> <th>Rank B0 Q2 </th> <th> Rank B0 Q3  </th> <th> Rank B1 Q0</th> <th> Rank B1 Q1 </th> <th>Rank B1 Q2 </th> <th> Rank B1 Q3 </th> <th> Rank B2 Q0</th> <th> Rank B2 Q1 </th> <th>Rank B2 Q2 </th> <th> Rank B2 Q3 </th>
+
+	</tr>
+	{% for event in data['eventlist'] %}
+	<tr>
+		{% for evt in event %}
+		<td> {{evt}} </td>
+		{% endfor %}
+	</tr>
+	{% endfor %}
+</table>
+
+</body>
+</html>
+
+
+

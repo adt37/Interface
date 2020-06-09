@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <body>
+    <h1>Diagnostics Page</h1>
+    <h3>First Enter the triggertime, Then according to UTC, Enter Obs-ID and Orbit from the CZTI DQR page</h3>
+    <form action="{{url_for('get_diagnostics')}}" method="POST">
+        <p> Enter Triggertime in seconds: <input type='text' name="ttime" value = {{ttime}} /></p>
+        <p> <input type="submit" name="action" value="get_UTC"/></p>
+        <p> Time in UTC is: <output type="text" name="UTC">{{UTC}}</output></p>
+        <p>Enter obs-ID: <input type="text" name="obsid"/></p>
+        <p>Enter Orbit number:<input type="text" name="orbit"/></p>
+        <p><input type="submit" name="action" value="diagnostics"/></p>
+        
+        
+    </form>
+    <hr>
+    </body>
+</html>
